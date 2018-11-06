@@ -96,7 +96,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
     }
     if (tipo === 'medicos') {
         Medico.findById(id, (err, medico) => {
-            if (!usuario) {
+            if (!medico) {
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'Medico no existe',
@@ -121,7 +121,7 @@ function subirPorTipo(tipo, id, nombreArchivo, res) {
     }
     if (tipo === 'hospitales') {
         Hospital.findById(id, (err, hospital) => {
-            if (!usuario) {
+            if (!hospital) {
                 return res.status(400).json({
                     ok: false,
                     mensaje: 'Hospital no existe',

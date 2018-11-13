@@ -19,7 +19,7 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
             break;
 
         case 'medicos':
-            promesa = buscarMedicos2(busqueda, regex);
+            promesa = buscarMedicos(busqueda, regex);
             break;
 
         case 'hospitales':
@@ -35,7 +35,7 @@ app.get('/coleccion/:tabla/:busqueda', (req, res) => {
     }
     promesa.then(data => {
         res.status(200).json({
-            ok: false,
+            ok: true,
             [tabla]: data
         });
     });
@@ -79,8 +79,8 @@ function buscarHospitales(busqueda, regex) {
 function buscarMedicos(busqueda, regex) {
     return new Promise((resolve, reject) => {
         Medico.find({ nombre: regex })
-            .populate('usuario', 'nombre email img')
-            .populate('hospital')
+            .populate('usuario', 'all')
+            .populate({ path: 'hospital' })
             .exec((err, medicos) => {
                 if (err) {
                     reject('Error al cargar medicos', err);
@@ -90,6 +90,64 @@ function buscarMedicos(busqueda, regex) {
             });
     });
 }
+
+function buscarMedicos3(busqueda, regex) {
+    return new Promise((resolve, reject) => {
+        Medico.find({ nombre: regex })
+            .populate('usuario', 'nombre email img')
+            .populate('hospital')
+            .exec((err, medicos) => {
+                if (err) {
+                    reject('Error al cargar medicos', err);
+                } else {
+                    if (medicos.length === 0) {
+                        /* Inicia la busqueda de _id de hospital */
+                        getIdHospital(regex)
+                            .then(hospital => {
+                                console.log(hospital);
+                            });
+                        /* Termina la busqueda de _id de hospital */
+                    } else {
+                        resolve(medicos);
+                    }
+                }
+            });
+    });
+}
+
+var encuentraMedicoByIdHospital = function(idHospital) {
+        return new Promise((resolve, reject) => {
+            Medico.find({ hospital: idHospital })
+                .populate('usuario', 'all')
+                .populate('hospital')
+                .exec((err, medicos) => {
+                    if (err) {
+                        reject('Error al cargar medicos', err);
+                    } else {
+                        resolve(medicos);
+                    }
+                });
+        });
+    }
+    /*
+     * Función 
+     * Parametros: hospital string
+     * Return _id: string -- Id de Hospital --
+     */
+var getIdHospital = function(hospital) {
+    return new Promise((resolve, reject) => {
+        Hospital.find({ nombre: hospital })
+            .populate('usuario', 'all')
+            .exec((err, hospitales) => {
+                if (err) {
+                    reject('Error al cargar medicos', err);
+                } else {
+                    resolve(hospitales);
+                }
+            });
+    });
+}
+
 
 function buscarMedicos2(busqueda, regex) {
     return Promise.all([

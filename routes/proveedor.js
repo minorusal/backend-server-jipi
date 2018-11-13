@@ -1,31 +1,27 @@
 var express = require('express');
 var mdAutenticacion = require('../middlewares/autenticacion');
 var app = express();
-var Hospital = require('../models/hospital');
-
-// =======================================
-// Obtener todos los Hospitales
-// =======================================
+var Proveedor = require('../models/proveedor');
 app.get('/', (req, res, next) => {
     var desde = req.query.desde || 0;
     desde = Number(desde);
-    Hospital.find({})
+    Proveedor.find({})
         .skip(desde)
         .limit(5)
         .populate('usuario', 'nombre email')
         .exec(
-            (err, hospitales) => {
+            (err, proveedores) => {
                 if (err) {
                     return res.status(500).json({
                         ok: false,
-                        mensaje: 'Error cargando hospital',
+                        mensaje: 'Error cargando proveedor',
                         errors: err
                     });
                 }
-                Hospital.count({}, (err, conteo) => {
+                Proveedor.count({}, (err, conteo) => {
                     res.status(200).json({
                         ok: true,
-                        hospitales: hospitales,
+                        proveedores: proveedores,
                         total: conteo
                     });
                 });
@@ -33,66 +29,64 @@ app.get('/', (req, res, next) => {
 });
 
 // ========================================== 
-// Obtener Hospital por ID 
+// Obtener Proveedor por ID 
 // ==========================================
 app.get('/:id', (req, res) => {
     var id = req.params.id;
-    Hospital.findById(id).populate('usuario', 'nombre img email').exec((err, hospital) => {
-        if (err) { return res.status(500).json({ ok: false, mensaje: 'Error al buscar hospital', errors: err }); }
-        if (!hospital) {
+    Proveedor.findById(id).populate('usuario', 'nombre img email').exec((err, proveedor) => {
+        if (err) { return res.status(500).json({ ok: false, mensaje: 'Error al buscar proveedor', errors: err }); }
+        if (!proveedor) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El hospital con el id ' + id + ' no existe',
-                errors: { message: 'No existe un hospital con ese ID' }
+                mensaje: 'El proveedor con el id ' + id + ' no existe',
+                errors: { message: 'No existe un proveedor con ese ID' }
             });
         }
         res.status(200).json({
             ok: true,
-            hospital: hospital
+            proveedor: proveedor
         });
     });
 });
 
-
-
 // =======================================
-// Actualizar un nuevo hospital
+// Actualizar un nuevo Proveedor
 // =======================================
 
 app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
     var body = req.body;
-    Hospital.findById(id, (err, hospital) => {
+    Proveedor.findById(id, (err, proveedor) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al buscar hospital',
+                mensaje: 'Error al buscar proveedor',
                 errors: err
             });
         }
 
-        if (!hospital) {
+        if (!proveedor) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'El hospital con el id ' + id + 'no existe',
-                errors: { message: 'No existe el hospital con ese ID' }
+                mensaje: 'El proveedor con el id ' + id + 'no existe',
+                errors: { message: 'No existe el proveedor con ese ID' }
             });
         }
-        hospital.nombre = body.nombre;
-        hospital.usuario = req.usuario._id;
+        proveedor.nombre = body.nombre;
+        proveedor.usuario = req.usuario._id;
 
-        hospital.save((err, hospitalGuardado) => {
+        proveedor.save((err, proveedorGuardado) => {
             if (err) {
                 return res.status(500).json({
                     ok: false,
-                    mensaje: 'Error al actualizar hospital',
+                    mensaje: 'Error al actualizar proveedor',
                     errors: err
                 });
             }
 
             res.status(200).json({
                 ok: true,
-                hospital: hospitalGuardado
+                proveedor: proveedorGuardado
             });
         });
 
@@ -100,56 +94,59 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
 });
 
 // =======================================
-// Crear un nuevo hospital
+// Crear un nuevo proveedor
 // =======================================
 
 app.post('/', mdAutenticacion.verificaToken, (req, res) => {
     var body = req.body;
-    var hospital = new Hospital({
+    var proveedor = new Proveedor({
         nombre: body.nombre,
+        rfc: body.rfc,
+        correo: body.correo,
+        telefono: body.telefono,
+        whatsapp: body.whatsapp,
         usuario: req.usuario._id
     });
-    hospital.save((err, hospitalGuardado) => {
+    proveedor.save((err, proveedorGuardado) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'Error al crear hospital',
+                mensaje: 'Error al crear proveedor',
                 errors: err
             });
         }
         res.status(201).json({
             ok: true,
-            hospital: hospitalGuardado
+            proveedor: proveedorGuardado
         });
     });
 });
 
 // =======================================
-// Borrar un hospital por ID
+// Borrar un proveedor por ID
 // =======================================
 app.delete('/:id', mdAutenticacion.verificaToken, (req, res) => {
     var id = req.params.id;
-    Hospital.findByIdAndRemove(id, (err, hospitalBorrado) => {
+    Proveedor.findByIdAndRemove(id, (err, proveedorBorrado) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                mensaje: 'Error al borrar hospital',
+                mensaje: 'Error al borrar proveedor',
                 errors: err
             });
         }
 
-        if (!hospitalBorrado) {
+        if (!proveedorBorrado) {
             return res.status(400).json({
                 ok: false,
-                mensaje: 'No existe un hospital con ese ID',
-                errors: { message: 'No existe un hospital con ese ID' }
+                mensaje: 'No existe un proveedor con ese ID',
+                errors: { message: 'No existe un proveedor con ese ID' }
             });
         }
         res.status(200).json({
             ok: true,
-            hospital: hospitalBorrado
+            proveedor: proveedorBorrado
         });
     });
 });
-
 module.exports = app;

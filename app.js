@@ -24,10 +24,18 @@ app.use(express.json());
 
 
 // Importar rutas
-var appRoutes = require('./routes/app');
 var usuarioRoutes = require('./routes/usuario');
+// Inicio rutas de ejemplo
+var appRoutes = require('./routes/app');
 var hospitalRoutes = require('./routes/hospital');
 var medicoRoutes = require('./routes/medico');
+// Fin rutas de ejemplo
+
+// Inicio rutas AdminJIPI
+
+var proveedorRoutes = require('./routes/proveedor');
+// Fin de rutas Admin JIPI 
+
 var busquedaRoutes = require('./routes/busqueda');
 var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require('./routes/imagenes');
@@ -47,8 +55,14 @@ mongoose.set('useCreateIndex', true);
 
 // Rutas
 app.use('/usuario', usuarioRoutes);
+// Inicio rutas de ejemplo
 app.use('/hospital', hospitalRoutes);
 app.use('/medico', medicoRoutes);
+// Fin rutas de ejemplo
+
+// Inicio rutas AdminJIPI
+app.use('/proveedor', proveedorRoutes);
+// Fin rutas AdminJIPI
 app.use('/upload', uploadRoutes);
 app.use('/img', imagenesRoutes);
 app.use('/login', loginRoutes);

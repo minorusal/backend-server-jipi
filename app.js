@@ -32,8 +32,8 @@ var medicoRoutes = require('./routes/medico');
 // Fin rutas de ejemplo
 
 // Inicio rutas AdminJIPI
-
 var proveedorRoutes = require('./routes/proveedor');
+var materialRoutes = require('./routes/material');
 // Fin de rutas Admin JIPI 
 
 var busquedaRoutes = require('./routes/busqueda');
@@ -62,6 +62,7 @@ app.use('/medico', medicoRoutes);
 
 // Inicio rutas AdminJIPI
 app.use('/proveedor', proveedorRoutes);
+app.use('/material', materialRoutes);
 // Fin rutas AdminJIPI
 app.use('/upload', uploadRoutes);
 app.use('/img', imagenesRoutes);

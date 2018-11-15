@@ -41,7 +41,13 @@ app.get('/:id', (req, res) => {
         .populate('proveedor')
         .populate('usuario', 'nombre img email')
         .exec((err, material) => {
-            if (err) { return res.status(500).json({ ok: false, mensaje: 'Error al buscar material', errors: err }); }
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al buscar material',
+                    errors: err
+                });
+            }
             if (!material) {
                 return res.status(400).json({
                     ok: false,
@@ -55,6 +61,51 @@ app.get('/:id', (req, res) => {
             });
         });
 });
+
+// =======================================
+// Actualizar un nuevo material
+// =======================================
+
+app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
+    var id = req.params.id;
+    var body = req.body;
+    Material.findById(id, (err, material) => {
+        if (err) {
+            return res.status(500).json({
+                ok: false,
+                mensaje: 'Error al buscar material',
+                errors: err
+            });
+        }
+
+        if (!material) {
+            return res.status(400).json({
+                ok: false,
+                mensaje: 'El material con el id ' + id + 'no existe',
+                errors: { message: 'No existe el material con ese ID' }
+            });
+        }
+        material.nombre = body.nombre;
+        material.usuario = req.usuario._id;
+
+        material.save((err, materialGuardado) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    mensaje: 'Error al actualizar material',
+                    errors: err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                material: materialGuardado
+            });
+        });
+
+    });
+});
+
 
 // =======================================
 // Crear un nuevo material

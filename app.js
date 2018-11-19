@@ -70,7 +70,9 @@ app.use('/login', loginRoutes);
 app.use('/busqueda', busquedaRoutes);
 app.use('/', appRoutes);
 
+app.set('port', process.env.PORT || 3000)
+
 // Escuchar peticiones
-app.listen(3000, () => {
+app.listen(app.get('port'), () => {
     console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'online');
 });

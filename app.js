@@ -42,37 +42,38 @@ var imagenesRoutes = require('./routes/imagenes');
 var loginRoutes = require('./routes/login');
 
 // Conexión a la base de datos
-mongoose.connection.openUri('mongodb://localhost:27017/jipidb', { useNewUrlParser: true }, (err, res) => {
-    if (err) throw err;
-    console.log('Base de datos: \x1b[32m%s\x1b[0m', 'online');
-});
-mongoose.set('useCreateIndex', true);
+mongoose.connection.openUri('mongodb://jipiuser:jipiuser2018@ds029267.mlab.com:29267/adminjipi', { useNewUrlParser: true }, (err, res) => {
+            mongoose.connection.openUri(, { useNewUrlParser: true }, (err, res) => {
+                if (err) throw err;
+                console.log('Base de datos: \x1b[32m%s\x1b[0m', 'online');
+            });
+            mongoose.set('useCreateIndex', true);
 
-// Server index config
-// var serveIndex = require('serve-index');
-// app.use(express.static(__dirname + '/'))
-// app.use('/uploads', serveIndex(__dirname + '/uploads'));
+            // Server index config
+            // var serveIndex = require('serve-index');
+            // app.use(express.static(__dirname + '/'))
+            // app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
-// Rutas
-app.use('/usuario', usuarioRoutes);
-// Inicio rutas de ejemplo
-app.use('/hospital', hospitalRoutes);
-app.use('/medico', medicoRoutes);
-// Fin rutas de ejemplo
+            // Rutas
+            app.use('/usuario', usuarioRoutes);
+            // Inicio rutas de ejemplo
+            app.use('/hospital', hospitalRoutes);
+            app.use('/medico', medicoRoutes);
+            // Fin rutas de ejemplo
 
-// Inicio rutas AdminJIPI
-app.use('/proveedor', proveedorRoutes);
-app.use('/material', materialRoutes);
-// Fin rutas AdminJIPI
-app.use('/upload', uploadRoutes);
-app.use('/img', imagenesRoutes);
-app.use('/login', loginRoutes);
-app.use('/busqueda', busquedaRoutes);
-app.use('/', appRoutes);
+            // Inicio rutas AdminJIPI
+            app.use('/proveedor', proveedorRoutes);
+            app.use('/material', materialRoutes);
+            // Fin rutas AdminJIPI
+            app.use('/upload', uploadRoutes);
+            app.use('/img', imagenesRoutes);
+            app.use('/login', loginRoutes);
+            app.use('/busqueda', busquedaRoutes);
+            app.use('/', appRoutes);
 
-app.set('port', process.env.PORT || 3000)
+            app.set('port', process.env.PORT || 3000)
 
-// Escuchar peticiones
-app.listen(app.get('port'), () => {
-    console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'online');
-});
+            // Escuchar peticiones
+            app.listen(app.get('port'), () => {
+                console.log('Express server puerto 3000: \x1b[32m%s\x1b[0m', 'online');
+            });

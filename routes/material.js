@@ -85,7 +85,20 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
                 errors: { message: 'No existe el material con ese ID' }
             });
         }
+
         material.nombre = body.nombre;
+        material.clave_corta = body.clave_corta;
+        material.presentacion = body.presentacion;
+        material.costoPresentacion = body.costoPresentacion;
+        material.unidadPresentacion = body.unidadPresentacion;
+        material.largo = body.largo;
+        material.ancho = body.ancho;
+        material.alto = body.alto;
+        material.count_litros = body.count_litros;
+        material.res_volumen = body.res_volumen;
+        material.res_area = body.res_area;
+        material.departamento = body.departamento;
+        material.proveedor = body.proveedor;
         material.usuario = req.usuario._id;
 
         material.save((err, materialGuardado) => {
@@ -117,6 +130,7 @@ app.post('/', mdAutenticacion.verificaToken, (req, res) => {
         clave_corta: body.clave_corta,
         descripcion: body.descripcion,
         presentacion: body.presentacion,
+        costoPresentacion: body.costoPresentacion,
         unidadPresentacion: body.unidadPresentacion,
         largo: body.largo,
         ancho: body.ancho,

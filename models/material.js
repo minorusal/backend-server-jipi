@@ -2,18 +2,19 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var presentacionesValidas = {
     values: ['LATA', 'CARRETE', 'ROLLO', 'PIEZA', 'LITRO', 'GALON', 'METRO', 'KILO'],
-    message: '{VALUE} no es una presentación permitido'
+    message: '{VALUE} no es una presentación permitida'
 }
 var unidadesValidas = {
     values: ['METRO CUBICO', 'METRO CUADRADO', 'METRO LINEAL', 'CENTIMETRO CUBICO', 'CENTIMETRO CUADRADO', 'CENTIMETRO LINEAL', 'LITRO', 'PIEZA'],
-    message: '{VALUE} no es una unidad permitido'
+    message: '{VALUE} no es una unidad permitida'
 }
 var materialSchema = new Schema({
     nombre: { type: String, required: [true, 'El nombre	es necesario'] },
     img: { type: String, required: false },
     clave_corta: { type: String, required: [true, 'La clave corta es necesaria'] },
     descripcion: { type: String, required: [true, 'La descripcion es necesaria'] },
-    presentacion: { type: String, required: true, default: 'PIEZA', enum: presentacionesValidas },
+    presentacion: { type: String, required: [true, 'La descripcion es necesaria'] },
+    costoPresentacion: { type: Number, required: [true, 'El costo por presentación es necesario'] },
     unidadPresentacion: { type: String, required: true, default: 'METRO LINEAL', enum: unidadesValidas },
     largo: { type: Number },
     ancho: { type: Number },

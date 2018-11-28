@@ -73,6 +73,10 @@ app.put('/:id', mdAutenticacion.verificaToken, (req, res) => {
             });
         }
         proveedor.nombre = body.nombre;
+        proveedor.rfc = body.rfc;
+        proveedor.correo = body.correo;
+        proveedor.telefono = body.telefono;
+        proveedor.whatsapp = body.whatsapp;
         proveedor.usuario = req.usuario._id;
 
         proveedor.save((err, proveedorGuardado) => {
